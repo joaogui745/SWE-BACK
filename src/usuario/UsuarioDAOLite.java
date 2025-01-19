@@ -1,11 +1,13 @@
 package usuario;
 
+import avaliacao.Avaliacao;
 import bancodedados.BancoDeDados;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import restaurante.Restaurante;
 
 
 public class UsuarioDAOLite implements UsuarioDAO{
@@ -18,7 +20,7 @@ public class UsuarioDAOLite implements UsuarioDAO{
     @Override
     public boolean apagar(int idUsuario){
         try (PreparedStatement comando = conexao.prepareStatement(
-                    "DELETE FROM usuario WHERE idUser = ?;")) {
+                    "DELETE FROM usuario WHERE idUsuario = ?;")) {
             comando.setInt(1, idUsuario);
             int res  = comando.executeUpdate();
             return res == 1;
@@ -33,7 +35,7 @@ public class UsuarioDAOLite implements UsuarioDAO{
         String documento, nome, senha, email;
         String dataCadastro;
         try (PreparedStatement comando = conexao.prepareStatement(
-                "select * from usuario where idUser = ?")) {
+                "select * from usuario where idUsuario = ?")) {
         comando.setInt(1, idUsuario);
         ResultSet res  = comando.executeQuery();
         if (res.next()){
@@ -53,11 +55,9 @@ public class UsuarioDAOLite implements UsuarioDAO{
         } 
         return null;
     }
-
-
-
-
-public Usuario buscarPorEmail(String userEmail){
+    
+    @Override
+    public Usuario buscarPorEmail(String userEmail){
         String documento, nome, senha, email, dataCadastro;
         int idUsuario;
         try (PreparedStatement comando = conexao.prepareStatement(
@@ -70,7 +70,7 @@ public Usuario buscarPorEmail(String userEmail){
             email = res.getString("email");
             documento = res.getString("documento");
             dataCadastro = res.getString("dataCadastro");
-            idUsuario = res.getInt("idUser");
+            idUsuario = res.getInt("idUsuario");
             if (res.getString("tipoDocumento").equals("cpf")){
                 return new Pessoa(documento, nome, senha, email, idUsuario, dataCadastro);
             }
@@ -83,8 +83,6 @@ public Usuario buscarPorEmail(String userEmail){
         return null;
     }
     
-    
-
     @Override
     public boolean criar(Usuario usuario) {
         if (buscarPorEmail(usuario.getEmail()) != null){
@@ -105,6 +103,7 @@ public Usuario buscarPorEmail(String userEmail){
         return true;
     }
     
+    @Override
     public Usuario criarRet(Usuario usuario) {
         String documento, nome, senha, email, dataCadastro;
         int idUsuario;
@@ -126,7 +125,7 @@ public Usuario buscarPorEmail(String userEmail){
             email = ret.getString("email");
             documento = ret.getString("documento");
             dataCadastro = ret.getString("dataCadastro");
-            idUsuario = ret.getInt("idUser");
+            idUsuario = ret.getInt("idUsuario");
             if (ret.getString("tipoDocumento").equals("cpf")){
                 return new Pessoa(documento, nome, senha, email,idUsuario, dataCadastro);
             }
@@ -143,7 +142,7 @@ public Usuario buscarPorEmail(String userEmail){
     @Override
     public boolean atualizar(Usuario usuario, int idUsuario){
         try(PreparedStatement restricao = conexao.prepareStatement(
-                "SELECT * FROM usuario WHERE idUser != ? AND email = ?")) {
+                "SELECT * FROM usuario WHERE idUsuario != ? AND email = ?")) {
             restricao.setInt(1, idUsuario);
             restricao.setString(2, usuario.getEmail());
             ResultSet resultado = restricao.executeQuery();
@@ -155,7 +154,7 @@ public Usuario buscarPorEmail(String userEmail){
               UPDATE usuario
               SET nome = ?, senha = ?, email = ?,
               documento = ? , tipoDocumento = ?
-              WHERE idUser = ?; 
+              WHERE idUsuario = ?; 
         """)) {
             comando.setString(1, usuario.getNome());
             comando.setString(2, usuario.getSenha());
@@ -172,7 +171,6 @@ public Usuario buscarPorEmail(String userEmail){
         return false;
     }
     
-    
     @Override
     public ArrayList<Usuario> buscarTodos(){
         String documento, nome, senha, email, dataCadastro;
@@ -186,7 +184,7 @@ public Usuario buscarPorEmail(String userEmail){
             senha = res.getString("senha");
             email = res.getString("email");
             documento = res.getString("documento");
-            idUsuario = res.getInt("idUser");
+            idUsuario = res.getInt("idUsuario");
             dataCadastro = res.getString("dataCadastro");
             if (res.getString("tipoDocumento").equals("cpf")){
                 lista.add(new Pessoa(documento, nome, senha, email, idUsuario, dataCadastro));
@@ -200,5 +198,60 @@ public Usuario buscarPorEmail(String userEmail){
             System.out.println(ex);
         } 
         return lista;
-    }   
+    }
+    
+    @Override
+    public ArrayList<Restaurante> buscarRestaurantes(int idUsuario){
+        String nome, descricao, localizacao;
+        boolean temEntrega;
+        int idRestaurante;
+        ArrayList<Restaurante> lista = new ArrayList<>();
+        
+        try (PreparedStatement comando = conexao.prepareStatement(
+                "SELECT * FROM restaurante WHERE idUsuario = ?")) {
+        comando.setInt(0, idUsuario);
+        ResultSet res  = comando.executeQuery();
+        while (res.next()){
+            nome = res.getString("nome");
+            descricao = res.getString("descricao");
+            localizacao = res.getString("localizacao");
+            temEntrega = res.getInt("temEntrega") == 1;
+            idRestaurante = res.getInt("idRestaurante");
+            lista.add(new Restaurante(idRestaurante,idUsuario, nome, descricao, localizacao, temEntrega));
+        }
+        }
+        catch (SQLException ex) {
+            System.out.println(ex);
+        } 
+        return lista;
+    }
+
+    @Override
+    public ArrayList<Avaliacao> buscarAvaliacoes(int idUsuario) {
+        int idAvaliacao, idRestaurante;
+        float nota;
+        String dataAvaliacao, conteudo;
+        
+        ArrayList<Avaliacao> lista = new ArrayList<>();
+        
+        try (PreparedStatement comando = conexao.prepareStatement(
+                "SELECT * FROM avaliacao WHERE idUsuario = ?")) {
+        comando.setInt(0, idUsuario);
+        ResultSet res  = comando.executeQuery();
+        while (res.next()){
+            idAvaliacao = res.getInt("idAvaliacao");
+            idRestaurante = res.getInt("idRestaurante");
+            nota = res.getFloat("nota");
+            dataAvaliacao = res.getString("dataAvaliacao");
+            conteudo = res.getString("conteudo");
+            lista.add(new Avaliacao(idAvaliacao, idRestaurante, idUsuario, nota, dataAvaliacao, conteudo));
+        }
+        }
+        catch (SQLException ex) {
+            System.out.println(ex);
+        } 
+        return lista;
+    }
+    
+    
 }

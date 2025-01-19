@@ -5,7 +5,8 @@ public class Restaurante {
     String nome, descricao, localizacao;
     boolean temEntrega;
 
-    public Restaurante(String nome, String descricao, String localizacao, boolean temEntrega) {
+    public Restaurante(int idUser, String nome, String descricao, String localizacao, boolean temEntrega) {
+        this.idUser = idUser;
         this.nome = nome;
         this.descricao = descricao;
         this.localizacao = localizacao;

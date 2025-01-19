@@ -26,8 +26,8 @@ public abstract class Usuario {
     public String toString(){
         return String.format(
                 """
-                ID: %s
-                Nome: %s
+                idUsuario: %s
+                nome: %s
                 senha: %s
                 email: %s
                 data: %s
@@ -57,5 +57,22 @@ public abstract class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(String dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    
     
 }
