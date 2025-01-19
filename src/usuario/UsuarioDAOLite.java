@@ -2,19 +2,18 @@ package usuario;
 
 import avaliacao.Avaliacao;
 import bancodedados.BancoDeDados;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Connection;
 import java.util.ArrayList;
 import restaurante.Restaurante;
 
 
 public class UsuarioDAOLite implements UsuarioDAO{
     Connection conexao;
-
     public UsuarioDAOLite() {
-        this.conexao = BancoDeDados.getInstance().getConnection();
+        conexao = BancoDeDados.getInstance().getConnection();
     }
     
     @Override
@@ -84,23 +83,26 @@ public class UsuarioDAOLite implements UsuarioDAO{
     }
     
     @Override
-    public boolean criar(Usuario usuario) {
+    public int criar(Usuario usuario) {
+        int resultado = 0;
         if (buscarPorEmail(usuario.getEmail()) != null){
-            return false;
+            return resultado;
         }
         try (PreparedStatement comando = conexao.prepareStatement(
-                "INSERT INTO usuario(nome, senha, email, documento, tipoDocumento) VALUES(?, ?, ?, ?, ?);")) {
+                "INSERT INTO usuario(nome, senha, email, documento, tipoDocumento) VALUES(?, ?, ?, ?, ?)"
+                        + "RETURNING idUsuario;")) {
             comando.setString(1, usuario.getNome());
             comando.setString(2, usuario.getSenha());
             comando.setString(3, usuario.getEmail());
             comando.setString(4, usuario.getDocumento());
             comando.setString(5, usuario instanceof Pessoa ? "cpf" : "cnpj");
-            comando.execute();
+            ResultSet id = comando.executeQuery();
+            resultado = id.getInt("idUsuario");
         } 
         catch (SQLException ex) {
             System.out.println(ex);
         }
-        return true;
+        return resultado;
     }
     
     @Override
@@ -209,7 +211,7 @@ public class UsuarioDAOLite implements UsuarioDAO{
         
         try (PreparedStatement comando = conexao.prepareStatement(
                 "SELECT * FROM restaurante WHERE idUsuario = ?")) {
-        comando.setInt(0, idUsuario);
+        comando.setInt(1, idUsuario);
         ResultSet res  = comando.executeQuery();
         while (res.next()){
             nome = res.getString("nome");
@@ -236,7 +238,7 @@ public class UsuarioDAOLite implements UsuarioDAO{
         
         try (PreparedStatement comando = conexao.prepareStatement(
                 "SELECT * FROM avaliacao WHERE idUsuario = ?")) {
-        comando.setInt(0, idUsuario);
+        comando.setInt(1, idUsuario);
         ResultSet res  = comando.executeQuery();
         while (res.next()){
             idAvaliacao = res.getInt("idAvaliacao");

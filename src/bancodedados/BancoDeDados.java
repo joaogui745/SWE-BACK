@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 
 public class BancoDeDados {
     private static BancoDeDados instancia = null;
@@ -20,6 +19,10 @@ public class BancoDeDados {
                 comando.addBatch(LeitorDeArquivos.carregaArquivo("bancodedados/scripts/CriarPrato.sql"));
                 comando.addBatch(LeitorDeArquivos.carregaArquivo("bancodedados/scripts/CriarAvaliacao.sql"));
                 comando.executeBatch();
+                /*comando.executeUpdate(Dados.usuarios);
+                comando.executeUpdate(Dados.restaurantes);
+                comando.executeUpdate(Dados.pratos);
+                comando.executeUpdate(Dados.avaliacao);*/
             }
         } catch (SQLException | IOException ex ) {
             System.out.println(ex);

@@ -1,26 +1,41 @@
 package restaurante;
 
 public class Restaurante {
-    int idRestaurante, idUser;
+    int idRestaurante, idUsuario;
     String nome, descricao, localizacao;
     boolean temEntrega;
 
-    public Restaurante(int idUser, String nome, String descricao, String localizacao, boolean temEntrega) {
-        this.idUser = idUser;
+    public Restaurante(int idUsuario, String nome, String descricao, String localizacao, boolean temEntrega) {
+        this.idUsuario = idUsuario;
         this.nome = nome;
         this.descricao = descricao;
         this.localizacao = localizacao;
         this.temEntrega = temEntrega;
     }
 
-    public Restaurante(int idRestaurante, int idUser, String nome, String descricao, String localizacao, boolean temEntrega) {
+    public Restaurante(int idRestaurante, int idUsuario, String nome, String descricao, String localizacao, boolean temEntrega) {
         this.idRestaurante = idRestaurante;
-        this.idUser = idUser;
+        this.idUsuario = idUsuario;
         this.nome = nome;
         this.descricao = descricao;
         this.localizacao = localizacao;
         this.temEntrega = temEntrega;
     }
+
+    @Override
+    public String toString() {
+        return String.format("""
+                             idRestaurante: %s
+                             idUsuario: %s
+                             nome: %s
+                             descricao: %s
+                             localizacao: %s
+                             temEntrega: %S
+                             """, (idRestaurante != 0 ? Integer.toString(idRestaurante): ""), idUsuario, nome, descricao, localizacao,
+                             (temEntrega ? "SIM" : "Nao"));
+    }
+    
+    
 
     public int getIdRestaurante() {
         return idRestaurante;
@@ -31,11 +46,11 @@ public class Restaurante {
     }
 
     public int getIdUser() {
-        return idUser;
+        return idUsuario;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setIdUser(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNome() {

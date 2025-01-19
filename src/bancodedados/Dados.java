@@ -10,7 +10,7 @@ public class Dados {
                                    ('David Lee', 'password456', 'david.lee@example.com', '09876543200', 'cpf');
                                """;
     public static String restaurantes = """
-                                INSERT INTO restaurante (nome, descricao, temEntrega, localizacao, idUser) VALUES
+                                INSERT INTO restaurante (nome, descricao, temEntrega, localizacao, idUsuario) VALUES
                                 ('Cezar''s', 'Italian Restaurant', 1, 'Downtown', 1), 
                                 ('Sayonara', 'Sushi Place', 0, 'Uptown', 2),
                                 ('Porcao', 'Burger Joint', 1, 'Midtown', 1),

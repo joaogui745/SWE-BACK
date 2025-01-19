@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
+
 import java.util.ArrayList;
 
 public class AvaliacaoDAOLite implements AvaliacaoDAO {
     Connection conexao;
-
     public AvaliacaoDAOLite() {
-        this.conexao = BancoDeDados.getInstance().getConnection();
+        conexao = BancoDeDados.getInstance().getConnection();
     }
 
     @Override
@@ -24,6 +24,7 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
                 "select * from avaliacao where idAvaliacao = ?")) {
         comando.setInt(1, idAvaliacao);
         ResultSet res  = comando.executeQuery();
+        
         if (res.next()){
             idRestaurante = res.getInt("idRestaurante");
             idUsuario = res.getInt("idUsuario");
@@ -35,23 +36,28 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
         } 
         catch (SQLException ex) {
             System.out.println(ex);
-        } 
+        }
         return null;
     }
 
     @Override
-    public void criar(Avaliacao avaliacao) {
+    public int criar(Avaliacao avaliacao) {
+        int resultado = 0;
         try (PreparedStatement comando = conexao.prepareStatement(
-                "INSERT INTO avaliacao(idRestaurante, idUsuario, nota, conteudo) VALUES(?, ?, ?, ?);")) {
+                "INSERT INTO avaliacao(idRestaurante, idUsuario, nota, conteudo) VALUES(?, ?, ?, ?)"
+                        + "RETURNING idAvaliacao;")) {
             comando.setInt(1, avaliacao.getIdRestaurante());
             comando.setInt(2, avaliacao.getIdUsuario());
             comando.setFloat(3, avaliacao.getNota());
             comando.setString(4, avaliacao.getConteudo());
-            comando.execute();
+            ResultSet id = comando.executeQuery();
+            resultado = id.getInt("idAvaliacao");
+            
         } 
         catch (SQLException ex) {
             System.out.println(ex);
         }
+        return resultado;
     }
 
     @Override
@@ -61,6 +67,7 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
                     "DELETE FROM avaliacao WHERE idAvaliacao = ?;")) {
             comando.setInt(1, idAvaliacao);
             resultado  = comando.executeUpdate();
+            
         }catch (SQLException ex) {
                 System.out.println(ex);
         }
@@ -83,6 +90,7 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
             comando.setString(4, avaliacao.getConteudo());
             comando.setInt(5, idAvaliacao);
             resultado  = comando.executeUpdate();
+            
         }
         catch (SQLException ex) {
                 System.out.println(ex);
@@ -101,6 +109,7 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
         try (PreparedStatement comando = conexao.prepareStatement(
                 "select * from avaliacao")) {
         ResultSet res  = comando.executeQuery();
+        
         while (res.next()){
             idAvaliacao = res.getInt("idAvaliacao");
             idRestaurante = res.getInt("idRestaurante");
@@ -116,5 +125,6 @@ public class AvaliacaoDAOLite implements AvaliacaoDAO {
         } 
         return lista;
     }
+    
     
 }

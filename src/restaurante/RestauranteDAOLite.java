@@ -4,17 +4,16 @@ import avaliacao.Avaliacao;
 import bancodedados.BancoDeDados;
 import prato.Prato;
 import java.sql.PreparedStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
 
 import java.util.ArrayList;
 
 public class RestauranteDAOLite implements RestauranteDAO{
-    private final Connection conexao;
-    
+    Connection conexao;
     public RestauranteDAOLite() {
-        this.conexao = BancoDeDados.getInstance().getConnection();
+        conexao = BancoDeDados.getInstance().getConnection();
     }
     
     @Override
@@ -32,7 +31,7 @@ public class RestauranteDAOLite implements RestauranteDAO{
             descricao = res.getString("descricao");
             localizacao = res.getString("localizacao");
             temEntrega = res.getBoolean("temEntrega");
-            idUsuario = res.getInt("idUser");
+            idUsuario = res.getInt("idUsuario");
             return new Restaurante(idRestaurante, idUsuario, nome, descricao, localizacao, temEntrega);
         }
         } 
@@ -43,20 +42,23 @@ public class RestauranteDAOLite implements RestauranteDAO{
     }
 
     @Override
-    public boolean criar(Restaurante restaurante) {
+    public int criar(Restaurante restaurante) {
+        int resultado = 0;
         try (PreparedStatement comando = conexao.prepareStatement(
-                "INSERT INTO restaurante(nome, descricao, temEntrega, localizacao, idUser) VALUES(?, ?, ?, ?, ?);")) {
+                "INSERT INTO restaurante(nome, descricao, temEntrega, localizacao, idUsuario) VALUES(?, ?, ?, ?, ?)"
+                        + "RETURNING idRestaurante;")) {
             comando.setString(1, restaurante.getNome());
             comando.setString(2, restaurante.getDescricao());
             comando.setInt(3, restaurante.isTemEntrega() ? 1 : 0);
             comando.setString(4, restaurante.getLocalizacao());
             comando.setInt(5, restaurante.getIdUser());
-            comando.execute();
+            ResultSet id = comando.executeQuery();
+            resultado = id.getInt("idRestaurante");
         } 
         catch (SQLException ex) {
             System.out.println(ex);
         }
-        return true;
+        return resultado;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class RestauranteDAOLite implements RestauranteDAO{
         try (PreparedStatement comando = conexao.prepareStatement(
   """
               UPDATE restaurante
-              SET idUser = ?, nome = ?,
+              SET idUsuario = ?, nome = ?,
               descricao = ? , localizacao = ?, temEntrega = ?
               WHERE idRestaurante = ?; 
         """)) {
@@ -112,7 +114,7 @@ public class RestauranteDAOLite implements RestauranteDAO{
             descricao = res.getString("descricao");
             localizacao = res.getString("localizacao");
             temEntrega = res.getInt("temEntrega") == 1;
-            idUsuario = res.getInt("idUser");
+            idUsuario = res.getInt("idUsuario");
             idRestaurante = res.getInt("idRestaurante");
             lista.add(new Restaurante(idRestaurante,idUsuario, nome, descricao, localizacao, temEntrega));
         }
@@ -132,7 +134,7 @@ public class RestauranteDAOLite implements RestauranteDAO{
         
         try (PreparedStatement comando = conexao.prepareStatement(
                 "SELECT * FROM prato WHERE idRestaurante = ?")) {
-        comando.setInt(0, idRestaurante);
+        comando.setInt(1, idRestaurante);
         ResultSet res  = comando.executeQuery();
         while (res.next()){
             idPrato = res.getInt("idPrato");
@@ -159,7 +161,7 @@ public class RestauranteDAOLite implements RestauranteDAO{
         
         try (PreparedStatement comando = conexao.prepareStatement(
                 "SELECT * FROM avaliacao WHERE idRestaurante = ?")) {
-        comando.setInt(0, idRestaurante);
+        comando.setInt(1, idRestaurante);
         ResultSet res  = comando.executeQuery();
         while (res.next()){
             idAvaliacao = res.getInt("idAvaliacao");

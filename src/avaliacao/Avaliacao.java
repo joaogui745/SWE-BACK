@@ -1,7 +1,7 @@
 package avaliacao;
 
 
-public class Avaliacao {
+public class Avaliacao{
    private int idAvaliacao, idRestaurante, idUsuario;
    private float nota;
    private String dataAvaliacao, conteudo;
@@ -20,6 +20,18 @@ public class Avaliacao {
         this.nota = nota;
         this.dataAvaliacao = dataAvaliacao;
         this.conteudo = conteudo;
+    }
+    
+    @Override public String toString(){
+        return String.format("""
+                             idAvaliacao: %s
+                             idRestaurante: %d
+                             idUsuarios: %d
+                             nota: %.2f
+                             dataAvaliacao: %s
+                             conteudo: %s
+                             """, (idAvaliacao != 0 ? Integer.toString(idAvaliacao): ""), idRestaurante, idUsuario,
+                             nota, dataAvaliacao, conteudo);
     }
 
     public int getIdAvaliacao() {
