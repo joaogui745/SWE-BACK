@@ -1,5 +1,5 @@
 
-package prato;
+package modelos;
 
 public class Prato {
     int idPrato, idRestaurante;

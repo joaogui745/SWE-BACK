@@ -1,4 +1,4 @@
-package avaliacao;
+package modelos;
 
 
 public class Avaliacao{

@@ -1,5 +1,6 @@
-package avaliacao;
+package permanencia.interfaces;
 
+import modelos.Avaliacao;
 import java.util.ArrayList;
 
 public interface AvaliacaoDAO {

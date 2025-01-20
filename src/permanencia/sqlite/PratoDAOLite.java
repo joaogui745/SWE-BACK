@@ -1,13 +1,15 @@
 
-package prato;
+package permanencia.sqlite;
 
 
+import permanencia.interfaces.PratoDAO;
 import bancodedados.BancoDeDados;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
+import modelos.Prato;
 
 public class PratoDAOLite implements PratoDAO {
     Connection conexao;

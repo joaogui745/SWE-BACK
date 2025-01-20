@@ -1,13 +1,17 @@
-package usuario;
+package permanencia.sqlite;
 
-import avaliacao.Avaliacao;
+import permanencia.interfaces.UsuarioDAO;
+import modelos.Avaliacao;
 import bancodedados.BancoDeDados;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.util.ArrayList;
-import restaurante.Restaurante;
+import modelos.Restaurante;
+import modelos.Empresa;
+import modelos.Pessoa;
+import modelos.Usuario;
 
 
 public class UsuarioDAOLite implements UsuarioDAO{

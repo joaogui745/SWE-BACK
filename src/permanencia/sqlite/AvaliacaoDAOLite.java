@@ -1,5 +1,7 @@
-package avaliacao;
+package permanencia.sqlite;
 
+import permanencia.interfaces.AvaliacaoDAO;
+import modelos.Avaliacao;
 import bancodedados.BancoDeDados;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

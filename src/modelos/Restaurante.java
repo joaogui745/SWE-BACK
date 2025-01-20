@@ -1,4 +1,4 @@
-package restaurante;
+package modelos;
 
 public class Restaurante {
     int idRestaurante, idUsuario;

@@ -1,14 +1,16 @@
-package restaurante;
+package permanencia.sqlite;
 
-import avaliacao.Avaliacao;
+import permanencia.interfaces.RestauranteDAO;
+import modelos.Avaliacao;
 import bancodedados.BancoDeDados;
-import prato.Prato;
+import modelos.Prato;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 
 import java.util.ArrayList;
+import modelos.Restaurante;
 
 public class RestauranteDAOLite implements RestauranteDAO{
     Connection conexao;

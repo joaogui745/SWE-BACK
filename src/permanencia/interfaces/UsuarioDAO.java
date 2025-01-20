@@ -1,8 +1,9 @@
-package usuario;
+package permanencia.interfaces;
 
-import avaliacao.Avaliacao;
+import modelos.Avaliacao;
 import java.util.ArrayList;
-import restaurante.Restaurante;
+import modelos.Restaurante;
+import modelos.Usuario;
 
 public interface UsuarioDAO {
     public Usuario buscarPorId(int idUsuario);
