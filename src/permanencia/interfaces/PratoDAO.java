@@ -1,6 +1,7 @@
-package prato;
+package permanencia.interfaces;
 
 import java.util.ArrayList;
+import modelos.Prato;
 
 public interface PratoDAO{
     public Prato buscarPorId(int idPrato);

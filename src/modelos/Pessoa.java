@@ -1,4 +1,4 @@
-package usuario;
+package modelos;
 
 
 public class Pessoa extends Usuario {

@@ -1,11 +1,9 @@
 package tryfood;
 
 
-import usuario.UsuarioDAOLite;
-import usuario.*;
-import prato.*;
-import avaliacao.*;
-import restaurante.*;
+import modelos.Avaliacao;
+import permanencia.sqlite.AvaliacaoDAOLite;
+import permanencia.sqlite.UsuarioDAOLite;
 import java.util.ArrayList;
 
 public class TryFood {

@@ -1,9 +1,10 @@
 
-package restaurante;
+package permanencia.interfaces;
 
-import avaliacao.Avaliacao;
+import modelos.Avaliacao;
 import java.util.ArrayList;
-import prato.Prato;
+import modelos.Prato;
+import modelos.Restaurante;
 
 public interface RestauranteDAO{
     public Restaurante buscarPorId(int idRestaurante);

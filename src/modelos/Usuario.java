@@ -1,4 +1,4 @@
-package usuario;
+package modelos;
 
 public abstract class Usuario {
     protected String nome, senha, email, dataCadastro;
