@@ -3,22 +3,25 @@ package tryfood;
 
 import modelos.Avaliacao;
 import permanencia.sqlite.AvaliacaoDAOLite;
-import permanencia.sqlite.UsuarioDAOLite;
-import java.util.ArrayList;
 
 public class TryFood {
 
     public static void main(String[] args) {
-        AvaliacaoDAOLite userD = new AvaliacaoDAOLite();
-        Avaliacao bad = new Avaliacao(1, 2, (float) 10.0, "uma bosta");
-        int id = userD.criar(bad);
+        // Acessa o banco
+        AvaliacaoDAOLite acesso = new AvaliacaoDAOLite();
+        
+        // Cria o modelo
+        Avaliacao avaliacaoRuim = new Avaliacao(1, 2, (float) 3.0, "Odiei");
+        
+        // CRUD's ao banco de dados
+        int id = acesso.criar(avaliacaoRuim);
         System.out.println(id);
-        System.out.println(userD.buscarPorId(id));
-        bad.setConteudo("Moriscos lindos");
-        userD.atualizar(bad, id);
-        System.out.println(userD.buscarPorId(id));
-        userD.apagar( id);
-        for (Avaliacao user : userD.buscarTodos()){
+        System.out.println(acesso.buscarPorId(id));
+        avaliacaoRuim.setConteudo("Moriscos aguados");
+        acesso.atualizar(avaliacaoRuim, id);
+        System.out.println(acesso.buscarPorId(id));
+        acesso.apagar( id);
+        for (Avaliacao user : acesso.buscarTodos()){
             System.out.println(user);
         }
         
